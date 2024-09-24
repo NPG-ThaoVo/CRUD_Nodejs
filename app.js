@@ -6,11 +6,20 @@ const userRoutes = require("./routes/userRoutes");
 const projectRoutes = require("./routes/projectRoutes");
 
 const app = express();
-
+// const cors = require("cors");
+// app.use(cors());
 // Kết nối database
 connectDB();
 
-app.use(express.json());
+// app.use(express.json());
+
+const cors = require("cors");
+const corsOptions = {
+	origin: "*",
+	credentials: true, //access-control-allow-credentials:true
+	optionSuccessStatus: 200,
+};
+app.use(cors());
 
 // Swagger configuration
 const swaggerOptions = require("./swagger");
