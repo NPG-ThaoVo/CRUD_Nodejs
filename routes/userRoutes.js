@@ -129,6 +129,15 @@ router.get("/:id", async (req, res) => {
  */
 router.post("/", async (req, res) => {
 	try {
+		console.log("Dữ liệu nhận được:", req.body); // Thêm dòng này để kiểm tra dữ liệu đầu vào
+
+		// Kiểm tra xem req.body có tồn tại và có chứa email không
+		if (!req.body || !req.body.email) {
+			return res
+				.status(400)
+				.json({ message: "Dữ liệu không hợp lệ. Vui lòng cung cấp email." });
+		}
+
 		// Kiểm tra xem email đã tồn tại chưa
 		const existingUser = await User.findOne({ email: req.body.email });
 		if (existingUser) {
@@ -136,6 +145,11 @@ router.post("/", async (req, res) => {
 		}
 
 		// Kiểm tra xem username đã tồn tại chưa
+		if (!req.body.username) {
+			return res
+				.status(400)
+				.json({ message: "Dữ liệu không hợp lệ. Vui lòng cung cấp username." });
+		}
 		const existingUsername = await User.findOne({
 			username: req.body.username,
 		});
@@ -147,10 +161,8 @@ router.post("/", async (req, res) => {
 		await newUser.save();
 		res.status(201).json({ message: "User đã được tạo", userId: newUser._id });
 	} catch (error) {
-		if (error.name === "ValidationError") {
-			return res.status(400).json({ message: error.message });
-		}
-		res.status(500).json({ message: "Lỗi server" });
+		console.error("Lỗi khi tạo user:", error);
+		res.status(500).json({ message: "Lỗi server", error: error.message });
 	}
 });
 

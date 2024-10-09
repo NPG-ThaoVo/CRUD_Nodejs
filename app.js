@@ -11,7 +11,7 @@ const app = express();
 // Kết nối database
 connectDB();
 
-// app.use(express.json());
+app.use(express.json());
 
 const cors = require("cors");
 const corsOptions = {
